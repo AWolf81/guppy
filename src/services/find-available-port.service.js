@@ -12,13 +12,21 @@
  * hard of a problem!
  */
 const childProcess = window.require('child_process');
+const os = window.require('os');
 
 const MAX_ATTEMPTS = 15;
 
 export default () =>
   new Promise((resolve, reject) => {
     const checkPort = (port = 3000, attemptNum = 0) => {
-      childProcess.exec(`lsof -i :${port}`, (err, res) => {
+      let portInUseCommand;
+      if (os.platform() === 'win32') {
+        portInUseCommand = `netstat -na | find "${port}"`;
+      } else {
+        portInUseCommand = `lsof -i :${port}`;
+      }
+
+      childProcess.exec(portInUseCommand, (err, res) => {
         // Ugh, childProcess assumes that no output means that there was an
         // error, and `lsof` emits nothing when the port is empty. So,
         // counterintuitively, an error is good news, and a response is bad.

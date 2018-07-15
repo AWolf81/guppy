@@ -10,7 +10,9 @@ import { FAKE_CRA_PROJECT } from './create-project.fixtures';
 import type { ProjectType } from '../types';
 
 const fs = window.require('fs');
+const path = window.require('path');
 const childProcess = window.require('child_process');
+const spawn = window.require('cross-spawn');
 
 // Change this boolean flag to skip project creation.
 // Useful when working on the flow, to avoid having to wait for a real project
@@ -62,11 +64,11 @@ export default (
 
   const id = slug(projectName).toLowerCase();
 
-  const path = `${parentPath}/${id}`;
+  const projectPath = path.join(parentPath, id); //`${parentPath}/${id}`; // path fix --> used path.join / handle slash or backslash
 
-  const [instruction, ...args] = getBuildInstructions(projectType, path);
+  const [instruction, ...args] = getBuildInstructions(projectType, projectPath);
 
-  const process = childProcess.spawn(instruction, args);
+  const process = spawn(instruction, args); // fixed Windows ENOENT error at spawning npx create-react-app projectPath
 
   process.stdout.on('data', onStatusUpdate);
   process.stderr.on('data', onError);
@@ -76,7 +78,7 @@ export default (
   process.on('close', () => {
     onStatusUpdate('Dependencies installed');
 
-    fs.readFile(`${path}/package.json`, 'utf8', (err, data) => {
+    fs.readFile(`${projectPath}/package.json`, 'utf8', (err, data) => {
       if (err) {
         return console.error(err);
       }
@@ -87,8 +89,7 @@ export default (
         id,
         name: projectName,
         type: projectType,
-        icon: projectIcon,
-        // The project color is currently unused for freshly-created projects,
+        icon: projectIcon, // The project color is currently unused for freshly-created projects,
         // however it's used for imported non-guppy projects, and it seems like
         // a good thing to be consistent about (may be useful in other ways).
         color: getColorForProject(projectName),
@@ -97,12 +98,16 @@ export default (
 
       const prettyPrintedPackageJson = JSON.stringify(packageJson, null, 2);
 
-      fs.writeFile(`${path}/package.json`, prettyPrintedPackageJson, err => {
-        if (err) {
-          return console.error(err);
+      fs.writeFile(
+        `${projectPath}/package.json`,
+        prettyPrintedPackageJson,
+        err => {
+          if (err) {
+            return console.error(err);
+          }
+          onComplete(packageJson);
         }
-        onComplete(packageJson);
-      });
+      );
     });
   });
 };

@@ -10,8 +10,8 @@
     "url": "https://github.com/joshwcomeau/guppy.git"
   },
   "scripts": {
-    "start": "NODE_ENV=development npm run start:react",
-    "start:react": "BROWSER=none node scripts/start.js",
+    "start": "cross-env NODE_ENV=development PORT=5000 npm run start:react",
+    "start:react": "cross-env BROWSER=none node scripts/start.js",
     "build": "node scripts/build.js",
     "package:mac": "electron-packager . --platform=darwin --arch=x64 --icon=src/assets/icons/mac/logo.icns --prune=true --out=release-builds --overwrite",
     "package": "GENERATE_SOURCEMAP=false npm run build && npm run package:mac",
@@ -32,7 +32,8 @@
     "electron-store": "2.0.0",
     "fix-path": "2.1.0",
     "gatsby-cli": "1.1.58",
-    "ps-tree": "1.1.0"
+    "ps-tree": "1.1.0",
+    "tree-kill": "^1.2.0"
   },
   "devDependencies": {
     "@babel/core": "7.0.0-beta.44",
@@ -49,6 +50,8 @@
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "2.3.0",
     "color": "3.0.0",
+    "cross-env": "^5.2.0",
+    "cross-spawn": "^6.0.5",
     "css-loader": "0.28.9",
     "dotenv": "5.0.0",
     "dotenv-expand": "4.2.0",

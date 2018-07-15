@@ -48,12 +48,12 @@ let isElectronRunning = false;
  * Prevents multiple re-runs of Electron App
  */
 function runElectronApp() {
-  if (isElectronRunning)
-    return;
+  if (isElectronRunning) return;
 
   isElectronRunning = true;
 
-  exec(`ELECTRON_START_URL=http://localhost:${DEFAULT_PORT} electron .`,
+  exec(
+    `cross-env ELECTRON_START_URL=http://localhost:${DEFAULT_PORT} electron .`,
     (err, stdout, stderr) => {
       if (err) {
         console.info(chalk.red('Electron app run failed: ') + stderr);
@@ -137,8 +137,8 @@ checkBrowsers(paths.appPath)
       openBrowser(urls.localUrlForBrowser);
     });
 
-    ['SIGINT', 'SIGTERM'].forEach(function (sig) {
-      process.on(sig, function () {
+    ['SIGINT', 'SIGTERM'].forEach(function(sig) {
+      process.on(sig, function() {
         devServer.close();
         process.exit();
       });
@@ -146,12 +146,10 @@ checkBrowsers(paths.appPath)
 
     /**
      * Hook runElectronApp() to 'done' (compile) event
-     * 
+     *
      * Fails on error
      */
-    compiler.plugin('done',
-      stats => !stats.hasErrors() && runElectronApp()
-    );
+    compiler.plugin('done', stats => !stats.hasErrors() && runElectronApp());
   })
   .catch(err => {
     if (err && err.message) {

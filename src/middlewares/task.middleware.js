@@ -19,6 +19,7 @@ import type { Task, ProjectType } from '../types';
 const { ipcRenderer } = window.require('electron');
 const childProcess = window.require('child_process');
 const psTree = window.require('ps-tree');
+const kill = window.require('tree-kill');
 
 export default (store: any) => (next: any) => (action: any) => {
   if (!action.task) {
@@ -167,7 +168,7 @@ export default (store: any) => (next: any) => (action: any) => {
 
       child.on('exit', code => {
         const timestamp = new Date();
-
+        console.log('onExit', code, timestamp);
         store.dispatch(completeTask(task, timestamp, code === 0));
 
         if (task.name === 'eject') {
@@ -196,7 +197,15 @@ export default (store: any) => (next: any) => (action: any) => {
 
         const childrenPIDs = children.map(child => child.PID);
 
-        childProcess.spawn('kill', ['-9', ...childrenPIDs]);
+        console.log('pstree', processId, children, err);
+        //childProcess.spawn('kill', ['-9', ...childrenPIDs]);
+        for (let pid of childrenPIDs) {
+          if (pid) {
+            console.log('kill', pid);
+            // pid is defined
+            kill(pid);
+          }
+        }
 
         ipcRenderer.send('removeProcessId', processId);
 
@@ -210,6 +219,7 @@ export default (store: any) => (next: any) => (action: any) => {
           ? 'Server stopped'
           : 'Task aborted';
 
+        console.log('abort msg', abortMessage);
         next(
           receiveDataFromTaskExecution(
             task,
@@ -263,7 +273,7 @@ const getDevServerCommand = (
 ) => {
   switch (projectType) {
     case 'create-react-app':
-      return [`PORT=${port} npm`, 'run', task.name];
+      return [`cross-env PORT=${port} npm`, 'run', task.name];
     case 'gatsby':
       return ['npm', 'run', task.name, '--', `-p ${port}`];
     default:
