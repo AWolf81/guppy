@@ -55,6 +55,10 @@ checkBrowsers(paths.appPath)
     fs.emptyDirSync(paths.appBuild);
     // Merge with the public folder
     copyPublicFolder();
+
+    // Copy app package.json
+    // copyPackageJson();
+
     // Start the webpack build
     return build(previousFileSizes);
   })
@@ -160,4 +164,9 @@ function copyPublicFolder() {
     dereference: true,
     filter: file => file !== paths.appHtml,
   });
+}
+
+function copyPackageJson() {
+  console.log('copy', paths.appPackageJson, paths.appBuild);
+  fs.copySync(paths.appPackageJson, path.join(paths.appBuild, 'package.json'));
 }

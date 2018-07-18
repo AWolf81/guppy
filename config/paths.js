@@ -47,17 +47,15 @@ module.exports = {
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
   appIndexJs: resolveApp('src/index.js'),
-  appPackageJson: resolveApp('package.json'),
+  appPackageJson: resolveApp('src/package.json'),
   appSrc: resolveApp('src'),
   testsSetup: resolveApp('src/setupTests.js'),
   appNodeModules: resolveApp('node_modules'),
-  publicUrl: getPublicUrl(resolveApp('package.json')),
-  servedPath: getServedPath(resolveApp('package.json')),
+  publicUrl: getPublicUrl(resolveApp('src/package.json')),
+  servedPath: getServedPath(resolveApp('src/package.json')),
 };
 
 let checkForMonorepo = true;
-
-
 
 module.exports.srcPaths = [module.exports.appSrc];
 

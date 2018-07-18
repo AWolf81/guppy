@@ -30,6 +30,7 @@ const openBrowser = require('react-dev-utils/openBrowser');
 const paths = require('../config/paths');
 const config = require('../config/webpack.config.dev');
 const createDevServerConfig = require('../config/webpackDevServer.config');
+// const { autoUpdater } = require('electron-updater'); // todo add later
 
 const isInteractive = process.stdout.isTTY;
 
@@ -59,6 +60,8 @@ function runElectronApp() {
         console.info(chalk.red('Electron app run failed: ') + stderr);
         return;
       }
+
+      //autoUpdater.checkForUpdatesAndNotify(); // todo: check later
 
       // Clear console for brevity
       process.stdout.write('\x1bc');
