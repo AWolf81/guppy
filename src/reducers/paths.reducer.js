@@ -14,7 +14,7 @@ import { getWindowsHomeDir, isWin } from '../services/platform.services';
 
 import type { Action } from 'redux';
 
-const path = window.require('path');
+const glbPath = window.require('path');
 const os = window.require('os');
 
 type State = {
@@ -51,12 +51,12 @@ export const getDefaultParentPath = () => {
   const homedir = isWin ? getWindowsHomeDir() : os.homedir();
 
   return process.env.NODE_ENV === 'development'
-    ? path.join(homedir, '/guppy-projects-dev')
-    : path.join(homedir, '/guppy-projects');
+    ? glbPath.join(homedir, '/guppy-projects-dev')
+    : glbPath.join(homedir, '/guppy-projects');
 };
 
 export const getDefaultPath = (projectId: string) =>
-  `${getDefaultParentPath()}/${projectId}`;
+  glbPath.join(getDefaultParentPath(), projectId);
 
 //
 //

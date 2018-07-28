@@ -1,5 +1,7 @@
 // @flow
 import packageMan from './package-manager.service';
+import { formatCommandForPlatform } from './platform.services';
+import { logger } from './logger.service';
 const childProcess = window.require('child_process');
 
 export const installDependency = (
@@ -8,13 +10,14 @@ export const installDependency = (
   version: string
 ) => {
   return new Promise((resolve, reject) => {
-    childProcess.exec(
+    const child = childProcess.spawn(
       `${packageMan.addDependencyCommand()} ${dependencyName}@${version} -SE`,
       { cwd: projectPath },
       (err, res) => {
         err ? reject(err) : resolve(res);
       }
     );
+    logger(child);
   });
 };
 
@@ -23,24 +26,28 @@ export const uninstallDependency = (
   dependencyName: string
 ) => {
   return new Promise((resolve, reject) => {
-    childProcess.exec(
+    console.log('uninstall', projectPath);
+    const child = childProcess.spawn(
       `${packageMan.removeDependencyCommand()} ${dependencyName}`,
       { cwd: projectPath },
       (err, res) => {
         err ? reject(err) : resolve(res);
       }
     );
+
+    logger(child);
   });
 };
 
 export const reinstallDependencies = (projectPath: string) => {
   return new Promise((resolve, reject) => {
-    childProcess.exec(
+    const child = childProcess.spawn(
       packageMan.addDependencyCommand(),
       { cwd: projectPath },
       (err, res) => {
         err ? reject(err) : resolve(res);
       }
     );
+    logger(child);
   });
 };
