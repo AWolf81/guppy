@@ -3,9 +3,12 @@
  * It handles opening our app window, and quitting the application.
  */
 const { app, BrowserWindow, ipcMain } = require('electron');
+const { LOGGING } = require('./config/app');
+
 const path = require('path');
 const url = require('url');
 const childProcess = require('child_process');
+const winston = require('winston');
 
 const fixPath = require('fix-path');
 const psTree = require('ps-tree');
@@ -15,6 +18,14 @@ const psTree = require('ps-tree');
 // everything.
 if (process.env.NODE_ENV !== 'development') {
   fixPath();
+}
+
+//
+// If we're not in production then log to the `console`
+//
+if (process.env.NODE_ENV !== 'production') {
+  // TODO: Check if env for LOG_LEVEL is reallly needed
+  winston.level = process.env.LOG_LEVEL || 'debug';
 }
 
 // Keep a global reference of the window object, if you don't, the window will

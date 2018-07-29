@@ -81,6 +81,16 @@ Come hang out with us [on Gitter](https://gitter.im/guppy-gui/Lobby)!
 
 Guppy has an active community of contributors and collaborators that enjoy working together to continuously improve the application's form and function. Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project, you agree to abide by its terms. If you would like to get involved, have a look at our [Contributing Guide](CONTRIBUTING.md)!
 
+### Development notes
+You can find app-wide settings in `src/config/app.js`.
+
+**Current settings:**
+
+|     Name             | Description                                                          |
+|----------------------|----------------------------------------------------------------------|
+| PACKAGE_MANAGER      | used pkg manager 'yarn' (Note! Only yarn supported at the moment)    |
+| LOGGING              | if true it will log all outputs from yarn to the dev console.        |
+
 ### License
 
 [ISC](LICENSE.md), Copyright 2018 Joshua Comeau

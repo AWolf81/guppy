@@ -21,6 +21,7 @@ import {
 
 import type { Task, ProjectType } from '../types';
 import { PACKAGE_MANAGER_CMD } from '../services/platform.services';
+import { logger } from '../services/logger.service';
 
 const { ipcRenderer } = window.require('electron');
 const childProcess = window.require('child_process');
@@ -163,7 +164,7 @@ export default (store: any) => (next: any) => (action: any) => {
           },
         }
       );
-
+      logger(child, 'TASK');
       // When this application exits, we want to kill this process.
       // Send it up to the main process.
       ipcRenderer.send('addProcessId', child.pid);
