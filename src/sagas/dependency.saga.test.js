@@ -369,9 +369,6 @@ describe('Dependency sagas', () => {
           handleUninstallDependenciesStart
         )
       );
-      // expect(saga.next().value).toEqual( // Todo: Create queue.saga.test file
-      //   takeEvery(START_NEXT_ACTION_IN_QUEUE, handleStartNextActionInQueue)
-      // );
       expect(saga.next().done).toBe(true);
     });
   });
